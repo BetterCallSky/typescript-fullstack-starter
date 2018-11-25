@@ -1,0 +1,12 @@
+{
+  "name": "rx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "sideEffects": false,
+  "author": "",
+  "license": "UNLICENCED",
+  "dependencies": {
+    "rxjs": "^6.2.1"
+  }
+}

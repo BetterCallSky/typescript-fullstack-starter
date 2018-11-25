@@ -1,0 +1,6 @@
+{
+  "extends": ["../config/tslint/base.json"],
+  "rules": {
+    "member-ordering": false
+  }
+}

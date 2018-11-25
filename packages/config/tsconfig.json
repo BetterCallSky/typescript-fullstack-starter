@@ -1,0 +1,7 @@
+{
+  "extends": "../config/ts/base.json",
+  "compilerOptions": {
+    "rootDirs": ["../../node_modules", "node_modules"],
+    "checkJs": true
+  }
+}

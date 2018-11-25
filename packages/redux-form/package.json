@@ -1,0 +1,13 @@
+{
+  "name": "redux-form",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "sideEffects": false,
+  "author": "",
+  "license": "UNLICENCED",
+  "dependencies": {
+    "rx": "*",
+    "typeless": "*"
+  }
+}

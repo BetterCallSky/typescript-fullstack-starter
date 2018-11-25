@@ -1,0 +1,12 @@
+{
+  "name": "r",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "sideEffects": false,
+  "author": "",
+  "license": "UNLICENCED",
+  "dependencies": {
+    "remeda": "^0.0.7"
+  }
+}
