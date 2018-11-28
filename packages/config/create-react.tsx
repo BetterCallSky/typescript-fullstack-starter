@@ -12,17 +12,22 @@ import {
   compose,
   createStore as createReduxStore,
 } from 'redux';
-import { createEpicMiddleware } from 'typeless';
+import {
+  createEpicMiddleware,
+  createRootEpic,
+  createRootReducer,
+  TypelessContext,
+} from 'typeless';
 
 const MOUNT_NODE = document.getElementById('root');
 
 const history = createHistory();
 
-export const createApp = (root: React.ReactNode, getModules: () => any) => {
+export const createApp = (root: React.ReactNode) => {
+  const rootEpic = createRootEpic();
+  const rootReducer = createRootReducer();
   const createStore = (history: History) => {
-    const { reducer, epic } = getModules();
-
-    const epicMiddleware = createEpicMiddleware(epic);
+    const epicMiddleware = createEpicMiddleware<any, any>(rootEpic);
     const middleware = [epicMiddleware, routerMiddleware(history)];
     if (process.env.NODE_ENV !== 'production') {
       const createLogger = require('redux-logger').createLogger;
@@ -33,32 +38,28 @@ export const createApp = (root: React.ReactNode, getModules: () => any) => {
       );
     }
     const store = createReduxStore(
-      reducer,
+      rootReducer,
       {},
       compose(applyMiddleware(...middleware))
     );
 
-    const reload = () => {
-      const { reducer, epic } = getModules();
-      store.replaceReducer(reducer);
-      epicMiddleware.replaceEpic(epic);
-    };
-    return { store, reload };
+    return store;
   };
-  const { store, reload } = createStore(history);
+  const store = createStore(history);
 
   interface AppProps {
     history: any;
     store: Store<any>;
   }
+  const context = { rootEpic, rootReducer, store };
   class App_ extends React.PureComponent<AppProps> {
     render() {
       const { history, store } = this.props;
       return (
         <Provider store={store}>
-          <>
+          <TypelessContext.Provider value={context}>
             <ConnectedRouter history={history}>{root}</ConnectedRouter>
-          </>
+          </TypelessContext.Provider>
         </Provider>
       );
     }
@@ -67,5 +68,4 @@ export const createApp = (root: React.ReactNode, getModules: () => any) => {
   const App = hot(module)(App_);
 
   ReactDOM.render(<App store={store} history={history} />, MOUNT_NODE);
-  return { reload };
 };
