@@ -1,14 +1,5 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
-// import SampleModuleLoader from './modules/sample-module/SampleModuleLoader';
-
-function TestView() {
-  return (
-    <div>
-      vvvv <input type="text" />
-    </div>
-  );
-}
 
 const SampleModuleLoader = React.lazy(() =>
   import('./modules/sample-module/SampleModuleLoader')

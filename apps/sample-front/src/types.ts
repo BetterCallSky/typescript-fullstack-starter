@@ -1,5 +1,6 @@
-import { RouterState } from './modules/router';
+export interface State {}
 
-export interface State {
-  router: RouterState;
+export interface User {
+  id: string;
+  username: string;
 }

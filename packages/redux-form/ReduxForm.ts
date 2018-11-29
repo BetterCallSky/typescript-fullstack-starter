@@ -63,7 +63,7 @@ export class ReduxForm<TData, TState = {}> {
       touched: {},
     };
     const epic = createEpic<TState>(`form_${form}`)
-      .on(
+      .onMany(
         [
           actions.change,
           actions.blur,
@@ -71,7 +71,6 @@ export class ReduxForm<TData, TState = {}> {
           actions.replace,
           actions.validate,
         ],
-        Rx.switchMap,
         (_, { getState }) => {
           if (!this.validator) {
             return Rx.empty();
@@ -102,46 +101,34 @@ export class ReduxForm<TData, TState = {}> {
         );
       });
     const reducer = createReducer(initialState)
-      // .nested('touched', inner =>
-      //   inner.merge(actions.blur, ({ field }, state) => {
-      //     return null;
-      //     return { [field]: true };
-      //   })
-      // );
-      .merge(actions.blur, ({ field }, state) => {
-        const touched = Object.assign({}, state.touched, { [field]: true });
-        return { touched };
+      .on(actions.blur, (state, { field }) => {
+        state.touched[field] = true;
       })
-      .merge(actions.change, ({ field, value }, state) => {
-        const values = Object.assign({}, state.values, { [field]: value });
-        return { values };
+      .on(actions.change, (state, { field, value }) => {
+        state.values[field] = value;
       })
-      .merge(actions.changeMany, ({ values }, state) => {
-        return { values: Object.assign({}, state.values, values) };
+      .on(actions.changeMany, (state, { values }) => {
+        Object.assign({}, state.values, values);
       })
-      .merge(actions.replace, ({ values }, state) => {
-        return { values };
+      .on(actions.replace, (state, { values }) => {
+        state.values = values;
       })
-      .merge(actions.setErrors, ({ errors }) => {
-        return { errors };
+      .on(actions.setErrors, (state, { errors }) => {
+        state.errors = errors;
       })
-      .merge(actions.touchAll, (_, { errors }) => {
-        return {
-          touched: Object.keys(errors).reduce(
-            (ret, key) => {
-              ret[key] = true;
-              return ret;
-            },
-            {} as any
-          ),
-        };
+      .on(actions.touchAll, state => {
+        state.touched = Object.keys(state.errors).reduce(
+          (ret, key) => {
+            ret[key] = true;
+            return ret;
+          },
+          {} as any
+        );
       })
-      .merge(actions.resetTouched, (_, {}) => {
-        return {
-          touched: {},
-        };
+      .on(actions.resetTouched, state => {
+        state.touched = {};
       })
-      .merge(actions.reset, (_, {}) => {
+      .on(actions.reset, () => {
         return initialState;
       });
 
