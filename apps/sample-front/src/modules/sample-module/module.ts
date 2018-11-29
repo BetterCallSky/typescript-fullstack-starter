@@ -1,28 +1,42 @@
 import * as Rx from 'rx';
-import { createEpic, createReducer, createActions } from 'typeless';
+import { createEpic, createReducer } from 'typeless';
 import { State } from 'src/types';
 import { SampleModuleState } from './types';
-
-const MODULE = 'SampleModule';
-
-// --- Actions ---
-export const SampleModuleActions = createActions(MODULE, {
-  test: null,
-  test2: null,
-  delayed: null,
-});
+import { MODULE } from './const';
+import { SampleModuleActions } from './actions';
 
 // --- Epic ---
-export const epic = createEpic<State>(MODULE).on(
-  SampleModuleActions.test,
-  () => {
-    console.log('c');
+export const epic = createEpic<State>(MODULE)
+  .on(SampleModuleActions.test, () => {
+    console.log('d');
     return Rx.mergeObs(
       Rx.of(SampleModuleActions.test2()),
-      Rx.of(SampleModuleActions.delayed()).pipe(Rx.delay(5000))
+      Rx.of(SampleModuleActions.delayed()).pipe(
+        Rx.delay(5000),
+        Rx.tap(() => {
+          console.log('delay d');
+        })
+      )
     );
-  }
-);
+  })
+  .onMany(
+    [SampleModuleActions.loaded, SampleModuleActions.replaced],
+    (_, { action$ }) => {
+      const type = 'd';
+      return new Rx.Observable(subscriber => {
+        subscriber.next({ type: 'init: ' + type });
+        const intervalId = setInterval(() => {
+          subscriber.next({ type: 'next: ' + type });
+        }, 1000);
+        return () => {
+          console.log('remove: ' + type);
+          clearInterval(intervalId);
+        };
+      }).pipe(
+        Rx.takeUntil(action$.pipe(Rx.ofType(SampleModuleActions.replaced)))
+      );
+    }
+  );
 
 // --- Reducer ---
 const initialState: SampleModuleState = {

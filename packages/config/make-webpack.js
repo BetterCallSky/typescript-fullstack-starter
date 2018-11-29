@@ -9,6 +9,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 const __PROD__ = process.env.NODE_ENV === 'production';
@@ -27,10 +29,16 @@ const fixStyleLoader = loader => {
 
 const getEnvPlugins = () => {
   if (__DEV__) {
-    return [new webpack.HotModuleReplacementPlugin()];
+    return [
+      process.env.CHECK_BUNDLE && new BundleAnalyzerPlugin(),
+      new webpack.HotModuleReplacementPlugin(),
+    ];
   }
   if (__PROD__) {
-    return [new ExtractTextPlugin('[name].[md5:contenthash:hex:20].css')];
+    return [
+      process.env.CHECK_BUNDLE && new BundleAnalyzerPlugin(),
+      new ExtractTextPlugin('[name].[md5:contenthash:hex:20].css'),
+    ];
   }
   return [new ExtractTextPlugin('[name].[md5:contenthash:hex:20].css')];
 };
