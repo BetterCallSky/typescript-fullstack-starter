@@ -1,16 +1,16 @@
 import { ModuleLoader } from 'typeless';
-import { SampleModuleView } from './SampleModuleView';
+import { {{name}}View } from './components/{{name}}View';
 import { epic, reducer } from './module';
 import React from 'react';
-import { SampleModuleActions } from './actions';
+import { {{name}}Actions } from './actions';
 
 export default () => (
   <ModuleLoader
     epic={epic}
     reducer={reducer}
-    reducerPath={['sampleModule']}
-    actions={SampleModuleActions}
+    reducerPath={['{{camelCase name}}']}
+    actions={ {{name}}Actions }
   >
-    <SampleModuleView />
+    <{{name}}View />
   </ModuleLoader>
 );

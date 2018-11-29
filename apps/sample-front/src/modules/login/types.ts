@@ -1,8 +1,7 @@
 export interface LoginState {
-  isSubmitting: boolean;
 }
 
-declare module '../../types' {
+declare module 'src/types' {
   export interface State {
     login: LoginState;
   }
