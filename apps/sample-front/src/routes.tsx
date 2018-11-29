@@ -14,7 +14,7 @@ const Index = () => (
 );
 
 const LoginRoute = () => (
-  <React.Suspense fallback={<div>Loading...</div>}>
+  <React.Suspense fallback={<div />}>
     <LoginLoader />
   </React.Suspense>
 );
