@@ -12,7 +12,7 @@
   "author": "",
   "betterScripts": {
     "dev": {
-      "command": "ts-node-dev --transpileOnly src/app.ts  | bunyan -o short -l trace",
+      "command": "ts-node-dev --respawn --transpileOnly src/app.ts  | bunyan -o short -l trace",
       "env": {
         "NODE_ENV": "development"
       }
@@ -41,6 +41,7 @@
     "@types/mongoose": "^5.3.3",
     "@types/mz": "^0.0.32",
     "@types/passport": "^0.4.7",
+    "@types/passport-http-bearer": "^1.0.33",
     "@types/uuid": "^3.4.4",
     "better-npm-run": "^0.1.1",
     "body-parser": "^1.18.3",
@@ -52,6 +53,7 @@
     "mongoose": "^5.3.14",
     "mz": "^2.7.0",
     "passport": "^0.4.0",
+    "passport-http-bearer": "^1.0.1",
     "ts-mongoose": "^0.0.6",
     "ts-node-dev": "^1.0.0-pre.31",
     "uuid": "^3.3.2",

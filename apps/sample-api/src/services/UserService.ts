@@ -2,7 +2,7 @@ import { createContract } from 'defensive';
 import { V } from 'veni';
 import crypto from 'mz/crypto';
 import { User } from '../models';
-import { BadRequestError } from '../common/errors';
+import { BadRequestError, NotFoundError } from '../common/errors';
 import config from 'config';
 import { createPasswordHash, serializeUser } from '../common/helper';
 import { serviceName } from '../common/serviceName';
@@ -62,7 +62,27 @@ export const register = createContract(serviceName('register'))
       const user = await register(req.body);
       return {
         user: serializeUser(user),
-        token: createBearerToken(user.id),
+        token: await createBearerToken(user.id),
       };
+    },
+  });
+
+export const getUser = createContract(serviceName('register'))
+  .params('id')
+  .schema({
+    id: V.string(),
+  })
+  .fn(async id => {
+    const user = await User.findById(id);
+    if (!user) {
+      throw new NotFoundError('User not found: ' + id);
+    }
+    return user;
+  })
+  .express({
+    method: 'get',
+    path: '/users/me',
+    async json(req) {
+      return serializeUser(await getUser(req.user.id));
     },
   });

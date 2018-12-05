@@ -1,3 +1,5 @@
+import { UserDoc } from './models';
+
 declare module 'config' {
   interface Config {
     BASE_URL: string;
@@ -11,4 +13,10 @@ declare module 'config' {
   }
   const config: Config;
   export default config;
+}
+
+declare module 'express' {
+  interface Request {
+    user: UserDoc;
+  }
 }

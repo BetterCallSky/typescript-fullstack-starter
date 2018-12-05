@@ -6,6 +6,8 @@ import bodyParser from 'body-parser';
 import fs from 'fs';
 import Path from 'path';
 import * as R from 'r';
+import { Strategy as BearerStrategy } from 'passport-http-bearer';
+import passport from 'passport';
 import { domainMiddleware } from './middlewares/domainMiddleware';
 import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware';
 import { notFoundHandlerMiddleware } from './middlewares/notFoundHandlerMiddleware';
@@ -14,6 +16,7 @@ import { connect } from 'mongoose';
 import { ContractBinding } from 'defensive';
 import loadRoutes from './common/loadRoutes';
 import './bindings/express';
+import { User, BearerToken } from './models';
 
 const app = express();
 app.set('port', config.PORT);
@@ -22,6 +25,20 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(domainMiddleware);
+
+passport.use(
+  new BearerStrategy(async (token, done) => {
+    const bearerToken = await BearerToken.findById(token);
+    if (!bearerToken) {
+      return done(null, false);
+    }
+    const user = await User.findById(bearerToken.userId);
+    if (!user) {
+      return done(null, false);
+    }
+    return done(null, user);
+  })
+);
 
 const apiRouter = express.Router();
 

@@ -26,9 +26,10 @@ export const errorHandlerMiddleware: ErrorRequestHandler = (
     body.error = err.message;
   }
   if (process.env.NODE_ENV !== 'production') {
-    body.stack = err.stack.split('\n');
+    body.stack = err.stack!.split('\n');
   }
   logger.error(err, `${body.status} ${req.method} ${req.url}`);
   res.status(status);
+  console.log(body);
   res.json(body);
 };

@@ -51,7 +51,12 @@ export default function loadRoutes(
       actions.push(options.handler);
     } else {
       actions.push((req, res, next) => {
-        res.json(options.json!(req, res));
+        Promise.resolve(options.json!(req, res))
+          .then(ret => {
+            console.log({ ret });
+            res.json(ret);
+          })
+          .catch(next);
       });
     }
     router[options.method](options.path, wrapExpress(actions));
