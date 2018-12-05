@@ -1,6 +1,7 @@
 import React from 'react';
-import { Routes } from 'src/routes';
 import { createGlobalStyle } from 'styled-components';
+import Global from 'src/modules/global';
+import { RouteResolver } from './RouteResolver';
 
 const GlobalStyle = createGlobalStyle`
   *, ::after, ::before {
@@ -25,7 +26,8 @@ const GlobalStyle = createGlobalStyle`
 export const App = () => {
   return (
     <>
-      <Routes />
+      <Global />
+      <RouteResolver />
       <GlobalStyle />
     </>
   );

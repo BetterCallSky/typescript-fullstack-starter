@@ -17,6 +17,7 @@ import {
 } from 'typeless';
 import { Root } from './components/Root';
 import RouterModule from './modules/router/RouterModule';
+import { AppContainer } from 'react-hot-loader';
 
 const MOUNT_NODE = document.getElementById('root');
 

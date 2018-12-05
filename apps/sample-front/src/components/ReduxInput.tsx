@@ -15,7 +15,7 @@ export const ReduxInput = (props: ReduxFormControlProps) => {
         const value = data.values[name];
         return (
           <FormInput
-            value={value}
+            value={value == null ? '' : value}
             error={hasError ? data.errors[name] : null}
             onBlur={() => data.actions.blur(name)}
             onChange={e => {

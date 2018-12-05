@@ -7,6 +7,6 @@
   "author": "",
   "license": "UNLICENCED",
   "dependencies": {
-    "rxjs": "^6.2.1"
+    "rxjs": "^6.3.3"
   }
 }

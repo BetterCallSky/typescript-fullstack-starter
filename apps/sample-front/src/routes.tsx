@@ -7,9 +7,24 @@ const SampleModuleLoader = React.lazy(() =>
 
 const LoginLoader = React.lazy(() => import('./modules/login'));
 
+const Dummy = () => <div>dummy</div>;
+
+const Delay = React.lazy(
+  () =>
+    new Promise(resolve => {
+      setTimeout(() => {
+        const ret = {
+          default: Dummy,
+        } as never;
+        resolve(ret);
+      }, 5000);
+    })
+);
+
 const Index = () => (
   <React.Suspense fallback={<div>Loading...</div>}>
     <SampleModuleLoader />
+    <Delay />
   </React.Suspense>
 );
 
