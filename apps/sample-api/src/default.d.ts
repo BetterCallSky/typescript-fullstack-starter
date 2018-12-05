@@ -3,6 +3,11 @@ declare module 'config' {
     BASE_URL: string;
     PORT: number;
     MONGODB_URL: string;
+    SECURITY: {
+      SALT_LENGTH: number;
+      ITERATIONS: number;
+      PASSWORD_LENGTH: number;
+    };
   }
   const config: Config;
   export default config;
