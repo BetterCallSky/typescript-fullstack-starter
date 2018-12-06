@@ -55,6 +55,8 @@ app.use('/' + config.BASE_URL, apiRouter);
 app.use(errorHandlerMiddleware);
 app.use(notFoundHandlerMiddleware);
 
+process.exit();
+
 if (!module.parent) {
   const server = http.createServer(app);
   connect(
@@ -76,7 +78,3 @@ if (!module.parent) {
 }
 
 export default app;
-
-// import * as R from 'r';
-// console.log('affff');
-// console.log(R);

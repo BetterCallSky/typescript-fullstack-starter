@@ -1,5 +1,3 @@
-import { UserDoc } from './models';
-
 declare module 'config' {
   interface Config {
     BASE_URL: string;
@@ -10,13 +8,12 @@ declare module 'config' {
       ITERATIONS: number;
       PASSWORD_LENGTH: number;
     };
+    SMTP_HOST: string;
+    SMTP_PORT: number;
+    SMTP_USERNAME: string;
+    SMTP_PASSWORD: string;
+    EMAIL_SENDER_ADDRESS: string;
   }
   const config: Config;
   export default config;
-}
-
-declare module 'express' {
-  interface Request {
-    user: UserDoc;
-  }
 }

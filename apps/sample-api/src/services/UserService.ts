@@ -36,7 +36,8 @@ export const register = createContract(serviceName('register'))
     values: V.object().keys({
       username: V.string()
         .min(3)
-        .max(16),
+        .max(16)
+        .regex(/^\w+$/),
       email: V.string().email(),
       password: V.string().min(4),
     }),
