@@ -1,6 +1,7 @@
 module.exports = {
   PORT: 3300,
   MONGODB_URL: 'mongodb://127.0.0.1:27017/sample-api',
+  AMQP_URL: 'amqp://localhost',
   VERBOSE_LOGGING: true,
   BASE_URL: 'api',
   SECURITY: {
@@ -8,6 +9,7 @@ module.exports = {
     ITERATIONS: 4096,
     PASSWORD_LENGTH: 64,
   },
+  SINGLE_PROCESS: true,
   SMTP_HOST: 'smtp.mailgun.org',
   SMTP_PORT: 587,
   SMTP_USERNAME: 'postmaster@example.com',

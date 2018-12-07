@@ -3,11 +3,12 @@
  */
 import * as R from 'r';
 import passport from 'passport';
-import { Router, Handler } from 'express';
+import { Router } from 'express';
 import { ContractBinding } from 'defensive';
 import { wrapExpress } from './wrapExpress';
 import { UnauthorizedError } from './errors';
 import logger from './logger';
+import { Handler } from '../types';
 
 /**
  * Load all routes with authentication check
@@ -59,6 +60,6 @@ export default function loadRoutes(
           .catch(next);
       });
     }
-    router[options.method](options.path, wrapExpress(actions));
+    router[options.method](options.path, wrapExpress(actions) as any);
   });
 }

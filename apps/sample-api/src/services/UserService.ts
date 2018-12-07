@@ -7,6 +7,8 @@ import config from 'config';
 import { createPasswordHash, serializeUser } from '../common/helper';
 import { serviceName } from '../common/serviceName';
 import { createBearerToken } from './SecurityService';
+import { sendMail } from './NotificationService';
+import { sendToQueue } from './Queue';
 
 async function _checkUniq(
   omitId: string | null,
@@ -52,6 +54,18 @@ export const register = createContract(serviceName('register'))
       username_lowered: values.username.toLowerCase(),
       salt,
       password: await createPasswordHash(values.password, salt),
+    });
+    await sendToQueue({
+      type: 'sendMail',
+      data: {
+        to: user.email,
+        data: {
+          type: 'welcome',
+          props: {
+            username: user.username,
+          },
+        },
+      },
     });
     return user;
   })

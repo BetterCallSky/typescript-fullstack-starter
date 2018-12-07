@@ -1,4 +1,4 @@
-import { Handler } from 'express';
+import { Handler } from '../types';
 
 /**
  * Wrap async function to standard express function
@@ -8,7 +8,7 @@ import { Handler } from 'express';
 function wrapRoute(fn: Handler): Handler {
   return (req, res, next) => {
     try {
-      const result = fn(req, res, next);
+      const result = fn(req, res, next) as any;
       if (result && result.catch) {
         result.catch(next);
       }

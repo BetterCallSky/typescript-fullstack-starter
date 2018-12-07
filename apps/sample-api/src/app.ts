@@ -3,9 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import bodyParser from 'body-parser';
-import fs from 'fs';
-import Path from 'path';
-import * as R from 'r';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import passport from 'passport';
 import { domainMiddleware } from './middlewares/domainMiddleware';
@@ -13,10 +10,12 @@ import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware';
 import { notFoundHandlerMiddleware } from './middlewares/notFoundHandlerMiddleware';
 import logger from './common/logger';
 import { connect } from 'mongoose';
-import { ContractBinding } from 'defensive';
 import loadRoutes from './common/loadRoutes';
 import './bindings/express';
+import './bindings/amqp';
 import { User, BearerToken } from './models';
+import { contracts } from './contracts';
+import { startWorker } from './worker';
 
 const app = express();
 app.set('port', config.PORT);
@@ -42,12 +41,6 @@ passport.use(
 
 const apiRouter = express.Router();
 
-const names = fs.readdirSync(Path.join(__dirname, './services'));
-
-const contracts = R.flatMap(names, name =>
-  Object.values(require('./services/' + name) as ContractBinding<any>[])
-);
-
 loadRoutes(apiRouter, contracts);
 
 app.use('/' + config.BASE_URL, apiRouter);
@@ -55,10 +48,11 @@ app.use('/' + config.BASE_URL, apiRouter);
 app.use(errorHandlerMiddleware);
 app.use(notFoundHandlerMiddleware);
 
-process.exit();
-
 if (!module.parent) {
   const server = http.createServer(app);
+  if (config.SINGLE_PROCESS) {
+    startWorker();
+  }
   connect(
     config.MONGODB_URL,
     { useNewUrlParser: true }

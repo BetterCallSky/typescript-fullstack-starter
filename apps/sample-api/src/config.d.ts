@@ -1,6 +1,7 @@
 declare module 'config' {
   interface Config {
     BASE_URL: string;
+    AMQP_URL: string;
     PORT: number;
     MONGODB_URL: string;
     SECURITY: {
@@ -8,6 +9,7 @@ declare module 'config' {
       ITERATIONS: number;
       PASSWORD_LENGTH: number;
     };
+    SINGLE_PROCESS: true;
     SMTP_HOST: string;
     SMTP_PORT: number;
     SMTP_USERNAME: string;

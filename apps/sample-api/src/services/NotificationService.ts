@@ -4,18 +4,8 @@ import config from 'config';
 import { welcome } from '../email-templates/welcome';
 import { resetPassword } from '../email-templates/resetPassword';
 import { createContract } from 'defensive';
-import { V } from 'veni';
-
-const templates = {
-  welcome,
-  resetPassword,
-};
-
-type Templates = typeof templates;
-
-type ExtractTemplateProps<T> = T extends (props: infer V) => any ? V : never;
-
-const templateType = Object.keys(templates).map(x => x as keyof Templates);
+import { serviceName } from '../common/serviceName';
+import { SendEmailSchema } from '../schemas';
 
 function _getTransporter() {
   return nodemailer.createTransport(
@@ -30,29 +20,32 @@ function _getTransporter() {
   );
 }
 
-type SendMail = <T extends keyof Templates>(
-  to: string,
-  type: T,
-  values: ExtractTemplateProps<Templates[typeof type]>
-) => Promise<void>;
-
-export const sendMail: SendMail = createContract('sendMail')
-  .params('to', 'type', 'values')
-  .schema({
-    to: V.string().email(),
-    type: V.enum().literal(...templateType),
-    values: V.object(),
-  })
-  .fn(async (to, type, values: any) => {
+export const sendMail = createContract(serviceName('sendMail'))
+  .params('to', 'data')
+  .schema(SendEmailSchema)
+  .fn(async (to, data) => {
     const transporter = _getTransporter();
-    const fn = templates[type] as (
-      props: object
-    ) => { title: string; body: string };
-    const { title, body } = fn(values);
+    const convert = () => {
+      switch (data.type) {
+        case 'resetPassword':
+          return resetPassword(data.props);
+        case 'welcome':
+          return welcome(data.props);
+      }
+    };
+    const { title, body } = convert();
     await transporter.sendMail({
       from: config.EMAIL_SENDER_ADDRESS,
       to,
       subject: title,
       html: body,
     });
+  })
+  .amqp({
+    prefetch: 10,
+    nackDelay: '10s',
+    type: 'sendMail',
+    async handler(msg) {
+      await sendMail(msg.to, msg.data);
+    },
   });
