@@ -2,12 +2,11 @@ import { createContract } from 'defensive';
 import { V } from 'veni';
 import crypto from 'mz/crypto';
 import { User } from '../models';
-import { BadRequestError, NotFoundError } from '../common/errors';
+import { BadRequestError } from '../common/errors';
 import config from 'config';
 import { createPasswordHash, serializeUser } from '../common/helper';
 import { serviceName } from '../common/serviceName';
 import { createBearerToken } from './SecurityService';
-import { sendMail } from './NotificationService';
 import { sendToQueue } from './Queue';
 
 async function _checkUniq(
@@ -82,17 +81,13 @@ export const register = createContract(serviceName('register'))
     },
   });
 
-export const getUser = createContract(serviceName('register'))
+export const getUser = createContract(serviceName('getUser'))
   .params('id')
   .schema({
     id: V.string(),
   })
   .fn(async id => {
-    const user = await User.findById(id);
-    if (!user) {
-      throw new NotFoundError('User not found: ' + id);
-    }
-    return user;
+    return await User.findByIdOrError(id);
   })
   .express({
     method: 'get',
