@@ -1,5 +1,5 @@
 import { ModuleLoader } from 'typeless';
-import { SampleModuleView } from './SampleModuleView';
+import { SampleModuleView } from './components/SampleModuleView';
 import { epic, reducer } from './module';
 import React from 'react';
 import { SampleModuleActions } from './actions';

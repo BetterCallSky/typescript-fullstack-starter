@@ -9,7 +9,7 @@ export default () => (
     epic={epic}
     reducer={reducer}
     reducerPath={['login']}
-    actions={ LoginActions }
+    actions={LoginActions}
   >
     <LoginView />
   </ModuleLoader>

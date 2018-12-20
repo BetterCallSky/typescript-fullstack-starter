@@ -36,7 +36,6 @@ const Title = styled.h1`
   font-weight: 400;
   text-align: center;
 `;
-
 export const LoginView = createConnect<State>()
   .mapState(state => ({
     ...R.pick(state.login, ['isLoading', 'error']),
@@ -45,6 +44,7 @@ export const LoginView = createConnect<State>()
   .pick(LoginActions, [])
   .sfc(props => {
     const { submit, isLoading, error } = props;
+    console.log('LoginView');
     return (
       <Wrapper>
         <LoginFormProvider>
@@ -54,7 +54,7 @@ export const LoginView = createConnect<State>()
               submit();
             }}
           >
-            <Title>Please sign in</Title>
+            <Title>Please sign in234567</Title>
             {error && <Alert>{error}</Alert>}
             <ReduxInput name="username" label="Username" />
             <ReduxInput name="password" label="Password" />

@@ -8,8 +8,8 @@ import {
   loginFormReducer,
   LoginFormActions,
 } from './login-form';
-import { push } from 'react-router-redux';
 import { GlobalActions } from '../global/actions';
+import { RouterActions } from '../router/actions';
 
 const login = (username: string, password: string) =>
   Rx.of(null).pipe(
@@ -32,7 +32,7 @@ export const epic = createEpic<State>('Login')
       Rx.of(LoginActions.setError('')),
       login(values.username, values.password).pipe(
         Rx.mergeMap(({ user, token }) => {
-          return [GlobalActions.loggedIn(user), push('/')];
+          return [GlobalActions.loggedIn(user), RouterActions.push('/')];
         }),
         Rx.catchLog(e => Rx.of(LoginActions.setError(e.message)))
       ),

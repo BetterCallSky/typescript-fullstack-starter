@@ -1,9 +1,6 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
-import createHistory from 'history/createBrowserHistory';
-import { routerMiddleware } from 'react-router-redux';
 import {
   applyMiddleware,
   compose,
@@ -14,19 +11,17 @@ import {
   createRootEpic,
   createRootReducer,
   TypelessContext,
+  onHmr,
 } from 'typeless';
-import { Root } from './components/Root';
 import RouterModule from './modules/router/RouterModule';
-import { AppContainer } from 'react-hot-loader';
 
 const MOUNT_NODE = document.getElementById('root');
 
-const history = createHistory();
 const rootEpic = createRootEpic();
 const rootReducer = createRootReducer();
 
 const epicMiddleware = createEpicMiddleware<any, any>(rootEpic);
-const middleware = [epicMiddleware, routerMiddleware(history)];
+const middleware = [epicMiddleware];
 if (process.env.NODE_ENV !== 'production') {
   const createLogger = require('redux-logger').createLogger;
   middleware.push(
@@ -43,15 +38,33 @@ const store = createReduxStore(
 
 const context = { rootEpic, rootReducer, store };
 
-ReactDOM.render(
-  <Provider store={store}>
-    <TypelessContext.Provider value={context}>
-      <RouterModule>
-        <ConnectedRouter history={history}>
-          <Root />
-        </ConnectedRouter>
-      </RouterModule>
-    </TypelessContext.Provider>
-  </Provider>,
-  MOUNT_NODE
-);
+const render = () => {
+  try {
+    const App = require('./components/App').App;
+    ReactDOM.unmountComponentAtNode(MOUNT_NODE);
+    ReactDOM.render(
+      <Provider store={store}>
+        <TypelessContext.Provider value={context}>
+          <RouterModule>
+            <App />
+          </RouterModule>
+        </TypelessContext.Provider>
+      </Provider>,
+      MOUNT_NODE
+    );
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      const RedBox = require('redbox-react').default;
+
+      ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
+    }
+    throw error;
+  }
+};
+
+if (module.hot) {
+  module.hot.accept('./components/App', () => {
+    onHmr(render);
+  });
+}
+render();

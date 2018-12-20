@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as R from 'r';
 import { createConnect } from 'typeless';
 import { State } from 'src/types';
-import { SampleModuleActions } from './actions';
+import { SampleModuleActions } from '../actions';
 
 export const SampleModuleView = createConnect<State>()
   .mapState(state => ({

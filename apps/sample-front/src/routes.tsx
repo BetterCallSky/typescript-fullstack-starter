@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 
 const SampleModuleLoader = React.lazy(() =>
-  import('./modules/sample-module/SampleModuleLoader')
+  import('./modules/sample-module/loader')
 );
 
-const LoginLoader = React.lazy(() => import('./modules/login'));
+const LoginLoader = React.lazy(() => import('./modules/login/loader'));
 
 const Dummy = () => <div>dummy</div>;
 

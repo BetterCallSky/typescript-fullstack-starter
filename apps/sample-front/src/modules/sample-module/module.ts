@@ -4,12 +4,12 @@ import { State } from 'src/types';
 import { SampleModuleState } from './types';
 import { MODULE } from './const';
 import { SampleModuleActions } from './actions';
+import { RouterActions } from '../router/actions';
 
 // --- Epic ---
-export const epic = createEpic<State>(MODULE).on(
-  SampleModuleActions.test,
-  () => {
-    console.log('fff');
+export const epic = createEpic<State>(MODULE)
+  .on(SampleModuleActions.test, () => {
+    console.log('b');
     return Rx.mergeObs(
       Rx.of(SampleModuleActions.test2()),
       Rx.of(SampleModuleActions.delayed()).pipe(
@@ -19,10 +19,12 @@ export const epic = createEpic<State>(MODULE).on(
         })
       )
     );
-  }
-);
+  })
+  .on(SampleModuleActions.test, () => {
+    return RouterActions.push('/' + Date.now());
+  });
 // .onMany(
-//   [SampleModuleActions.loaded, SampleModuleActions.replaced],
+//   [SampleModuleActions.mounted, SampleModuleActions.remounted],
 //   (_, { action$ }) => {
 //     const type = 'a';
 //     return new Rx.Observable(subscriber => {
@@ -35,7 +37,7 @@ export const epic = createEpic<State>(MODULE).on(
 //         clearInterval(intervalId);
 //       };
 //     }).pipe(
-//       Rx.takeUntil(action$.pipe(Rx.ofType(SampleModuleActions.replaced)))
+//       Rx.takeUntil(action$.pipe(Rx.ofType(SampleModuleActions.remounted)))
 //     );
 //   }
 // );
