@@ -5,8 +5,8 @@ import { State, RouteConfig } from 'src/types';
 // import { Switch, Route, Redirect } from 'react-router';
 // import LoginRoute from 'src/modules/login';
 
-const Dashboard = () => <div>Dashboard4b</div>;
-const NotFound = () => <div>NotFound</div>;
+// const Dashboard = () => <div>Dashboard4b</div>;
+// const NotFound = () => <div>NotFound</div>;
 
 // const LoginLoader = React.lazy(() => import('src/modules/login'));
 // const SampleLoader = React.lazy(() => import('src/modules/sample-module/loader'));
@@ -39,7 +39,7 @@ export const RouteResolver = createConnect<State>()
     ...R.pick(state.router, ['location']),
   }))
   .sfc(props => {
-    const { isLoaded, user, location } = props;
+    const { user, location } = props;
     console.log(location);
     // if (!isLoaded) {
     //   return null;

@@ -20,7 +20,7 @@ const MOUNT_NODE = document.getElementById('root');
 const rootEpic = createRootEpic();
 const rootReducer = createRootReducer();
 
-const epicMiddleware = createEpicMiddleware<any, any>(rootEpic);
+const epicMiddleware = createEpicMiddleware(rootEpic);
 const middleware = [epicMiddleware];
 if (process.env.NODE_ENV !== 'production') {
   const createLogger = require('redux-logger').createLogger;
