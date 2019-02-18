@@ -23,7 +23,7 @@ const NotFound = () => <div>NotFound</div>;
 //   </React.Suspense>
 // );
 
-const req = require.context('../modules', true, /config.tsx?$/);
+const req = require.context('../modules', true, /interface.tsx?$/);
 
 const routes = R.flatMap(req.keys(), key => {
   const module = req(key);
@@ -40,6 +40,7 @@ export const RouteResolver = createConnect<State>()
   }))
   .sfc(props => {
     const { isLoaded, user, location } = props;
+    console.log(location);
     // if (!isLoaded) {
     //   return null;
     // }

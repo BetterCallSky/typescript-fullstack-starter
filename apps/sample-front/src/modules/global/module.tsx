@@ -1,8 +1,7 @@
-import * as Rx from 'rx';
-import { createEpic, createReducer } from 'typeless';
+import { createEpic, createReducer, ModuleLoader } from 'typeless';
 import { State } from 'src/types';
-import { GlobalState } from './types';
-import { GlobalActions } from './actions';
+import { GlobalState, GlobalActions } from './interface';
+import React from 'react';
 
 // --- Epic ---
 export const epic = createEpic<State>('Global');
@@ -18,4 +17,14 @@ export const reducer = createReducer(initialState).on(
   (state, { user }) => {
     state.user = user;
   }
+);
+
+// --- Module ---
+export default () => (
+  <ModuleLoader
+    epic={epic}
+    reducer={reducer}
+    reducerPath={['global']}
+    actions={GlobalActions}
+  />
 );

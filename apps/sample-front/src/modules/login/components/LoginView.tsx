@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as R from 'r';
 import { createConnect } from 'typeless';
 import { State } from 'src/types';
-import { LoginActions } from '../actions';
+import { LoginActions } from '../interface';
 import styled from 'styled-components';
 import { FormInput } from 'src/components/FormInput';
 import { Button } from 'src/components/Button';
@@ -36,6 +36,7 @@ const Title = styled.h1`
   font-weight: 400;
   text-align: center;
 `;
+
 export const LoginView = createConnect<State>()
   .mapState(state => ({
     ...R.pick(state.login, ['isLoading', 'error']),
@@ -44,7 +45,6 @@ export const LoginView = createConnect<State>()
   .pick(LoginActions, [])
   .sfc(props => {
     const { submit, isLoading, error } = props;
-    console.log('LoginView');
     return (
       <Wrapper>
         <LoginFormProvider>
@@ -54,7 +54,7 @@ export const LoginView = createConnect<State>()
               submit();
             }}
           >
-            <Title>Please sign in234567</Title>
+            <Title>Please sign in</Title>
             {error && <Alert>{error}</Alert>}
             <ReduxInput name="username" label="Username" />
             <ReduxInput name="password" label="Password" />

@@ -1,15 +1,16 @@
 import * as Rx from 'rx';
-import { createEpic, createReducer } from 'typeless';
+import { createEpic, createReducer, ModuleLoader } from 'typeless';
 import { State } from 'src/types';
-import { LoginState } from './types';
-import { LoginActions } from './actions';
+import { LoginState, MODULE, LoginActions } from './interface';
 import {
   loginFormEpic,
   loginFormReducer,
   LoginFormActions,
 } from './login-form';
-import { GlobalActions } from '../global/actions';
+import { GlobalActions } from '../global/interface';
 import { RouterActions } from '../router/actions';
+import React from 'react';
+import { LoginView } from './components/LoginView';
 
 const login = (username: string, password: string) =>
   Rx.of(null).pipe(
@@ -23,7 +24,7 @@ const login = (username: string, password: string) =>
   );
 
 // --- Epic ---
-export const epic = createEpic<State>('Login')
+export const epic = createEpic<State>(MODULE)
   .attach(loginFormEpic)
   .on(LoginFormActions.setSubmitSucceeded, (_, { getState }) => {
     const { values } = getState().login.form;
@@ -55,3 +56,15 @@ export const reducer = createReducer(initialState)
     state.error = error;
   })
   .attach('form', loginFormReducer);
+
+// --- Module ---
+export default () => (
+  <ModuleLoader
+    epic={epic}
+    reducer={reducer}
+    reducerPath={['login']}
+    actions={LoginActions}
+  >
+    <LoginView />
+  </ModuleLoader>
+);

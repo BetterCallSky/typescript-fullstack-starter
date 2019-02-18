@@ -5,7 +5,6 @@ export interface Action {
   type: any;
 }
 export {
-  Observer,
   Subject,
   forkJoin,
   empty,
@@ -20,6 +19,13 @@ export {
   race as raceObs,
   throwError as throwObs,
 } from 'rxjs';
+
+export interface Observer<T> {
+  closed?: boolean;
+  next: (value: T) => void;
+  error: (err: any) => void;
+  complete: () => void;
+}
 
 export { ajax } from 'rxjs/ajax';
 

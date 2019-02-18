@@ -1,15 +1,15 @@
 import * as Rx from 'rx';
-import { createEpic, createReducer } from 'typeless';
+import { createEpic, createReducer, ModuleLoader } from 'typeless';
 import { State } from 'src/types';
-import { SampleModuleState } from './types';
-import { MODULE } from './const';
-import { SampleModuleActions } from './actions';
-import { RouterActions } from '../router/actions';
+import { SampleModuleActions, MODULE, SampleModuleState } from './interface';
+import React from 'react';
+import { SampleModuleView } from './components/SampleModuleView';
 
 // --- Epic ---
-export const epic = createEpic<State>(MODULE)
-  .on(SampleModuleActions.test, () => {
-    console.log('b');
+export const epic = createEpic<State>(MODULE).on(
+  SampleModuleActions.test,
+  () => {
+    console.log('cb');
     return Rx.mergeObs(
       Rx.of(SampleModuleActions.test2()),
       Rx.of(SampleModuleActions.delayed()).pipe(
@@ -19,10 +19,11 @@ export const epic = createEpic<State>(MODULE)
         })
       )
     );
-  })
-  .on(SampleModuleActions.test, () => {
-    return RouterActions.push('/' + Date.now());
-  });
+  }
+);
+// .on(SampleModuleActions.test, () => {
+//   return RouterActions.push('/' + Date.now());
+// });
 // .onMany(
 //   [SampleModuleActions.mounted, SampleModuleActions.remounted],
 //   (_, { action$ }) => {
@@ -52,4 +53,16 @@ export const reducer = createReducer(initialState).on(
   state => {
     state.bar = Date.now();
   }
+);
+
+// --- Module ---
+export default () => (
+  <ModuleLoader
+    epic={epic}
+    reducer={reducer}
+    reducerPath={['sampleModule']}
+    actions={SampleModuleActions}
+  >
+    <SampleModuleView />
+  </ModuleLoader>
 );

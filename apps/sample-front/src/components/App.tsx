@@ -1,6 +1,6 @@
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import Global from 'src/modules/global';
+import Global from 'src/modules/global/module';
 import { RouteResolver } from './RouteResolver';
 
 const GlobalStyle = createGlobalStyle`
