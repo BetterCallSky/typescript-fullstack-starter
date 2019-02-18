@@ -8,6 +8,7 @@ export const MODULE = 'Login';
 
 // --- Actions ---
 export const LoginActions = createActions(MODULE, {
+  mounted: null,
   loaded: null,
   unloaded: null,
   replaced: null,
@@ -27,7 +28,7 @@ const LoginRoute = () => (
 export const routeConfig: RouteConfig = {
   type: 'route',
   auth: false,
-  path: '/',
+  path: '/login',
   component: <LoginRoute />,
 };
 

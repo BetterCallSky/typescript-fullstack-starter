@@ -1,8 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import * as R from 'r';
-import { createConnect } from 'typeless';
+import { useMappedState, useActions } from 'typeless';
 import { State } from 'src/types';
-import { LoginActions } from '../interface';
 import styled from 'styled-components';
 import { FormInput } from 'src/components/FormInput';
 import { Button } from 'src/components/Button';
@@ -37,32 +36,30 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-export const LoginView = createConnect<State>()
-  .mapState(state => ({
+export const LoginView = () => {
+  const { submit } = useActions(LoginFormActions);
+  const { isLoading, error } = useMappedState((state: State) => ({
     ...R.pick(state.login, ['isLoading', 'error']),
-  }))
-  .pick(LoginFormActions, ['submit'])
-  .pick(LoginActions, [])
-  .sfc(props => {
-    const { submit, isLoading, error } = props;
-    return (
-      <Wrapper>
-        <LoginFormProvider>
-          <Form
-            onSubmit={e => {
-              e.preventDefault();
-              submit();
-            }}
-          >
-            <Title>Please sign in</Title>
-            {error && <Alert>{error}</Alert>}
-            <ReduxInput name="username" label="Username" />
-            <ReduxInput name="password" label="Password" />
-            <Button large block loading={isLoading}>
-              Sign in
-            </Button>
-          </Form>
-        </LoginFormProvider>
-      </Wrapper>
-    );
-  });
+  }));
+
+  return (
+    <Wrapper>
+      <LoginFormProvider>
+        <Form
+          onSubmit={e => {
+            e.preventDefault();
+            submit();
+          }}
+        >
+          <Title>Please sign in</Title>
+          {error && <Alert>{error}</Alert>}
+          <ReduxInput name="username" label="Username" />
+          <ReduxInput name="password" label="Password" />
+          <Button large block loading={isLoading}>
+            Sign in
+          </Button>
+        </Form>
+      </LoginFormProvider>
+    </Wrapper>
+  );
+};

@@ -15,7 +15,7 @@ export const epic = createEpic<State>(MODULE).on(
       Rx.of(SampleModuleActions.delayed()).pipe(
         Rx.delay(5000),
         Rx.tap(() => {
-          console.log('delay d');
+          console.log('delay e');
         })
       )
     );
@@ -27,7 +27,7 @@ export const epic = createEpic<State>(MODULE).on(
 // .onMany(
 //   [SampleModuleActions.mounted, SampleModuleActions.remounted],
 //   (_, { action$ }) => {
-//     const type = 'a';
+//     const type = 'b';
 //     return new Rx.Observable(subscriber => {
 //       subscriber.next({ type: 'init: ' + type });
 //       const intervalId = setInterval(() => {

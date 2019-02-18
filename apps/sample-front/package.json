@@ -29,6 +29,7 @@
     "redux": "^4.0.1",
     "redux-form": "*",
     "redux-logger": "^3.0.6",
+    "redux-react-hook": "^3.1.0",
     "reselect": "^4.0.0",
     "rx": "*",
     "styled-components": "^4.0.3",

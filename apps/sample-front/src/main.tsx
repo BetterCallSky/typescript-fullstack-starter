@@ -13,6 +13,7 @@ import {
   TypelessContext,
   onHmr,
 } from 'typeless';
+import { StoreContext } from 'redux-react-hook';
 import RouterModule from './modules/router/RouterModule';
 
 const MOUNT_NODE = document.getElementById('root');
@@ -44,11 +45,13 @@ const render = () => {
     ReactDOM.unmountComponentAtNode(MOUNT_NODE);
     ReactDOM.render(
       <Provider store={store}>
-        <TypelessContext.Provider value={context}>
-          <RouterModule>
-            <App />
-          </RouterModule>
-        </TypelessContext.Provider>
+        <StoreContext.Provider value={store}>
+          <TypelessContext.Provider value={context}>
+            <RouterModule>
+              <App />
+            </RouterModule>
+          </TypelessContext.Provider>
+        </StoreContext.Provider>
       </Provider>,
       MOUNT_NODE
     );

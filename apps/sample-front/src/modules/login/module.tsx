@@ -1,5 +1,5 @@
 import * as Rx from 'rx';
-import { createEpic, createReducer, ModuleLoader } from 'typeless';
+import { createEpic, createReducer, useModule, batchUpdate } from 'typeless';
 import { State } from 'src/types';
 import { LoginState, MODULE, LoginActions } from './interface';
 import {
@@ -14,7 +14,7 @@ import { LoginView } from './components/LoginView';
 
 const login = (username: string, password: string) =>
   Rx.of(null).pipe(
-    Rx.delay(2000),
+    Rx.delay(300),
     Rx.mergeMap(() => {
       if (username === 'user' && password == 'pass') {
         return Rx.of({ user: { id: 'a', username: 'user' }, token: '123' });
@@ -32,8 +32,11 @@ export const epic = createEpic<State>(MODULE)
       Rx.of(LoginActions.setLoading(true)),
       Rx.of(LoginActions.setError('')),
       login(values.username, values.password).pipe(
-        Rx.mergeMap(({ user, token }) => {
-          return [GlobalActions.loggedIn(user), RouterActions.push('/')];
+        Rx.map(({ user, token }) => {
+          return batchUpdate([
+            GlobalActions.loggedIn(user),
+            RouterActions.push('/'),
+          ]);
         }),
         Rx.catchLog(e => Rx.of(LoginActions.setError(e.message)))
       ),
@@ -58,13 +61,12 @@ export const reducer = createReducer(initialState)
   .attach('form', loginFormReducer);
 
 // --- Module ---
-export default () => (
-  <ModuleLoader
-    epic={epic}
-    reducer={reducer}
-    reducerPath={['login']}
-    actions={LoginActions}
-  >
-    <LoginView />
-  </ModuleLoader>
-);
+export default () => {
+  useModule({
+    epic,
+    reducer,
+    reducerPath: ['login'],
+    actions: LoginActions,
+  });
+  return <LoginView />;
+};
