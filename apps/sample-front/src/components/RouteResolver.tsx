@@ -1,27 +1,7 @@
 import * as R from 'r';
-import React from 'react';
-import { createConnect } from 'typeless';
+import React, { useRef, useEffect } from 'react';
+import { useMappedState } from 'typeless';
 import { State, RouteConfig } from 'src/types';
-// import { Switch, Route, Redirect } from 'react-router';
-// import LoginRoute from 'src/modules/login';
-
-// const Dashboard = () => <div>Dashboard4b</div>;
-// const NotFound = () => <div>NotFound</div>;
-
-// const LoginLoader = React.lazy(() => import('src/modules/login'));
-// const SampleLoader = React.lazy(() => import('src/modules/sample-module/loader'));
-
-// const LoginRoute = () => (
-//   <React.Suspense fallback={<div />}>
-//     <LoginLoader />
-//   </React.Suspense>
-// );
-
-// const SampleRoute = () => (
-//   <React.Suspense fallback={<div />}>
-//     <SampleLoader />
-//   </React.Suspense>
-// );
 
 const req = require.context('../modules', true, /interface.tsx?$/);
 
@@ -31,56 +11,47 @@ const routes = R.flatMap(req.keys(), key => {
     (item: RouteConfig) => item.type === 'route'
   ) as RouteConfig[];
 });
-console.log(routes);
 
-export const RouteResolver = createConnect<State>()
-  .mapState(state => ({
+function usePrevious<T>(value: T) {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+
+  return ref.current;
+}
+
+export const RouteResolver = () => {
+  const { user, location } = useMappedState((state: State) => ({
     ...R.pick(state.global, ['isLoaded', 'user']),
     ...R.pick(state.router, ['location']),
-  }))
-  .sfc(props => {
-    const { user, location } = props;
-    console.log(location);
-    // if (!isLoaded) {
-    //   return null;
-    // }
-
-    const match = routes.find(route => {
-      if ((route.auth && !user) || (!route.auth && user)) {
+  }));
+  const prevUser = usePrevious(user);
+  const getMatch = (pathname: string, isLogged: boolean) =>
+    routes.find(route => {
+      if ((route.auth && !isLogged) || (!route.auth && isLogged)) {
         return false;
       }
-      return route.path === location.pathname;
+      return route.path === pathname;
     });
-    console.log('render', match ? match.path : 'not found');
+
+  let match = getMatch(location.pathname, !!user);
+  if (match) {
+    return match.component;
+  }
+  if (!prevUser && user) {
+    // user is logging in
+    // keep rendering current route
+    match = getMatch(location.pathname, !user);
     if (match) {
       return match.component;
     }
+  }
 
-    return (
-      <div style={{ background: 'red', width: '100%', height: '100vh' }}>
-        Not found
-      </div>
-    );
-    // return <SampleRoute />;
-
-    // if (user) {
-    //   return <Dashboard />;
-    // }
-    // return <LoginRoute />;
-
-    // if (user) {
-    //   return (
-    //     <Switch>
-    //       <Route path="/" component={Dashboard} exact />
-    //       <Route path="*" component={NotFound} />
-    //       {/* <Redirect path="*" to="/" /> */}
-    //     </Switch>
-    //   );
-    // }
-    // return (
-    //   <Switch>
-    //     <Route path="/login" component={LoginRoute} />
-    //     <Redirect path="*" to="/login" />
-    //   </Switch>
-    // );
-  });
+  return (
+    <div style={{ background: 'red', width: '100%', height: '100vh' }}>
+      Not found
+    </div>
+  );
+};

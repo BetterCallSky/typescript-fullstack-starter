@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { createConnect } from 'typeless';
+import React, { useMemo } from 'react';
+import { useActions, useMappedState } from 'typeless';
 import { FormContext } from './FormContext';
 
 export function createFormProvider<
@@ -9,20 +9,20 @@ export function createFormProvider<
     change: (...args: any[]) => any;
   }
 >(mapState: (state: S) => { form: any }, actions: A) {
-  return createConnect<S>()
-    .external<{ children: React.ReactNode }>()
-    .mapState(mapState)
-    .actions(actions)
-    .sfc(props => {
-      const { form, blur, change, children } = props;
-      return (
-        <FormContext.Provider
-          value={Object.assign({}, form, {
-            actions: { blur, change },
-          })}
-        >
-          {children}
-        </FormContext.Provider>
-      );
-    });
+  return (props: { children: React.ReactChild }) => {
+    const { blur, change } = useActions(actions);
+    const { form } = useMappedState(mapState);
+    const { children } = props;
+    const value = useMemo(
+      () =>
+        Object.assign({}, form, {
+          actions: { blur, change },
+        }),
+      [form]
+    );
+
+    return (
+      <FormContext.Provider value={value}>{children}</FormContext.Provider>
+    );
+  };
 }

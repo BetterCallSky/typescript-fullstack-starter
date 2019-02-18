@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import {
   applyMiddleware,
   compose,
@@ -10,11 +9,9 @@ import {
   createEpicMiddleware,
   createRootEpic,
   createRootReducer,
-  TypelessContext,
   onHmr,
+  TypelessProvider,
 } from 'typeless';
-import { StoreContext } from 'redux-react-hook';
-import RouterModule from './modules/router/RouterModule';
 
 const MOUNT_NODE = document.getElementById('root');
 
@@ -37,22 +34,18 @@ const store = createReduxStore(
   compose(applyMiddleware(...middleware))
 );
 
-const context = { rootEpic, rootReducer, store };
-
 const render = () => {
   try {
     const App = require('./components/App').App;
     ReactDOM.unmountComponentAtNode(MOUNT_NODE);
     ReactDOM.render(
-      <Provider store={store}>
-        <StoreContext.Provider value={store}>
-          <TypelessContext.Provider value={context}>
-            <RouterModule>
-              <App />
-            </RouterModule>
-          </TypelessContext.Provider>
-        </StoreContext.Provider>
-      </Provider>,
+      <TypelessProvider
+        store={store}
+        rootEpic={rootEpic}
+        rootReducer={rootReducer}
+      >
+        <App />
+      </TypelessProvider>,
       MOUNT_NODE
     );
   } catch (error) {

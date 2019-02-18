@@ -1,5 +1,5 @@
 import * as Rx from 'rx';
-import { createEpic, createReducer, ModuleLoader } from 'typeless';
+import { createEpic, createReducer, useModule } from 'typeless';
 import { State } from 'src/types';
 import { SampleModuleActions, MODULE, SampleModuleState } from './interface';
 import React from 'react';
@@ -56,13 +56,12 @@ export const reducer = createReducer(initialState).on(
 );
 
 // --- Module ---
-export default () => (
-  <ModuleLoader
-    epic={epic}
-    reducer={reducer}
-    reducerPath={['sampleModule']}
-    actions={SampleModuleActions}
-  >
-    <SampleModuleView />
-  </ModuleLoader>
-);
+export default () => {
+  useModule({
+    epic,
+    reducer,
+    reducerPath: ['sampleModule'],
+    actions: SampleModuleActions,
+  });
+  return <SampleModuleView />;
+};

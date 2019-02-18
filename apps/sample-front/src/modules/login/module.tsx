@@ -8,7 +8,7 @@ import {
   LoginFormActions,
 } from './login-form';
 import { GlobalActions } from '../global/interface';
-import { RouterActions } from '../router/actions';
+import { RouterActions } from '../router/interface';
 import React from 'react';
 import { LoginView } from './components/LoginView';
 

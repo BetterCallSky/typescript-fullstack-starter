@@ -1,8 +1,6 @@
-import { createReducer, createEpic } from 'typeless';
+import { createReducer, createEpic, useModule } from 'typeless';
 import * as Rx from 'rx';
-import { RouterState } from './types';
-import { RouterActions } from './actions';
-import { MODULE } from './const';
+import { MODULE, RouterActions, RouterState } from './interface';
 import { State } from 'src/types';
 import { history } from '../../history';
 
@@ -40,3 +38,12 @@ export const reducer = createReducer(initialState).on(
     state.location = payload;
   }
 );
+
+// --- Module ---
+export const useRouterModule = () =>
+  useModule({
+    epic,
+    reducer,
+    reducerPath: ['router'],
+    actions: RouterActions,
+  });
