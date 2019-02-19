@@ -1,6 +1,7 @@
 import { AnyAction } from 'redux';
 import { withBatch } from './withBatch';
-import { RootReducer } from './types';
+import { DefaultState } from './types';
+import { ChainedReducer } from './ChainedReducer';
 
 type AnyObject = {
   [x: string]: any;
@@ -59,16 +60,23 @@ function applyReducerTree(
   return newState;
 }
 
-export const createRootReducer = <TState>() => {
-  const tree: AnyObject = {};
-  const rootReducer = (withBatch((state: TState, action: AnyAction) => {
-    return applyReducerTree(state, tree, action);
-  }) as any) as RootReducer<TState>;
-  rootReducer.addReducer = (reducer, path) => {
-    addAtPath(tree, reducer, path);
-  };
-  rootReducer.removeReducer = path => {
-    removeAtPath(tree, path);
-  };
-  return rootReducer;
-};
+export class RootReducer<TState = DefaultState> {
+  private tree: AnyObject;
+  constructor() {
+    this.tree = {};
+  }
+
+  getReducer() {
+    return withBatch((state: TState, action: AnyAction) =>
+      applyReducerTree(state, this.tree, action)
+    );
+  }
+
+  addReducer(reducer: ChainedReducer<any>, path: string[]) {
+    addAtPath(this.tree, reducer, path);
+  }
+
+  removeReducer(path: string[]) {
+    removeAtPath(this.tree, path);
+  }
+}

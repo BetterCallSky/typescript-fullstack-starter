@@ -1,19 +1,18 @@
-import { ChainedReducer } from './createReducer';
+import { ChainedReducer } from './ChainedReducer';
 import React, { useEffect, useContext, useMemo } from 'react';
 import { TypelessContext } from './TypelessContext';
 import { Epic } from './Epic';
 import { getIsHmr } from './onHmr';
-
-type AnyActionCreator = (...args: any[]) => any;
+import { AC } from './types';
 
 interface BaseLoaderOptions<TState> {
   children?: React.ReactChild;
   epic: Epic<TState>;
   actions?: {
-    mounted?: AnyActionCreator;
-    unmounted?: AnyActionCreator;
-    remounted?: AnyActionCreator;
-    [x: string]: AnyActionCreator;
+    mounted?: AC;
+    unmounted?: AC;
+    remounted?: AC;
+    [x: string]: AC;
   };
 }
 

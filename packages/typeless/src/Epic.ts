@@ -1,9 +1,22 @@
-import { from, of, empty, defer } from 'rxjs';
+import { from, of, empty, defer, Observable } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
+import { AnyAction } from 'redux';
 import { isAction, logAction } from './utils';
-import { AC, EpicHandler, HandlerFn, DefaultState } from './types';
+import { AC, Deps, ExtractPayload, ActionLike } from './types';
 
-export class Epic<TState = DefaultState> {
+export type EpicResult = Observable<ActionLike> | ActionLike | ActionLike[];
+
+export type HandlerFn<TState> = (
+  deps: Deps<TState>
+) => (action: AnyAction) => Observable<EpicResult>;
+
+export type EpicHandler<TAC extends AC, TState> = (
+  payload: ExtractPayload<ReturnType<TAC>>,
+  deps: Deps<TState>,
+  action: ReturnType<TAC> & { type: string }
+) => EpicResult;
+
+export class Epic<TState> {
   handlers: { [x: string]: Array<HandlerFn<TState>> };
   constructor(public epicName: string) {
     this.handlers = {};
@@ -106,6 +119,3 @@ export class Epic<TState = DefaultState> {
     return this;
   }
 }
-
-export const createEpic = <T = DefaultState>(epicName: string) =>
-  new Epic<T>(epicName);

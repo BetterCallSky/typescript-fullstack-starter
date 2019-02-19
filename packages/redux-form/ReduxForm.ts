@@ -100,6 +100,7 @@ export class ReduxForm<TData, TState = {}> {
           Rx.of(actions.touchAll())
         );
       });
+
     const reducer = createReducer(initialState)
       .on(actions.blur, (state, { field }) => {
         state.touched[field] = true;

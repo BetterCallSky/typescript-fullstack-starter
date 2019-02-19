@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom';
 import { applyMiddleware, createStore as createReduxStore } from 'redux';
 import {
   createEpicMiddleware,
-  createRootEpic,
-  createRootReducer,
+  RootEpic,
+  RootReducer,
   onHmr,
   TypelessProvider,
 } from 'typeless';
 
 const MOUNT_NODE = document.getElementById('root');
 
-const rootEpic = createRootEpic();
-const rootReducer = createRootReducer();
+const rootEpic = new RootEpic();
+const rootReducer = new RootReducer();
 
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const middleware = [epicMiddleware];
@@ -24,7 +24,11 @@ if (process.env.NODE_ENV !== 'production') {
     })
   );
 }
-const store = createReduxStore(rootReducer, {}, applyMiddleware(...middleware));
+const store = createReduxStore(
+  rootReducer.getReducer(),
+  {},
+  applyMiddleware(...middleware)
+);
 
 const render = () => {
   try {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { RootReducer } from './types';
+import { RootReducer } from './RootReducer';
 import { Store } from 'redux';
 import { RootEpic } from './RootEpic';
 

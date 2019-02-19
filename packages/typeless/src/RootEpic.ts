@@ -1,9 +1,9 @@
 import { merge } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { Deps } from './types';
+import { Deps, DefaultState } from './types';
 import { Epic } from './Epic';
 
-export class RootEpic<TState> {
+export class RootEpic<TState = DefaultState> {
   private tree: { [x: string]: Epic<TState> };
   constructor() {
     this.tree = {};

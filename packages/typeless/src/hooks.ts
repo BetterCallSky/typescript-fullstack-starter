@@ -3,9 +3,9 @@ import {
   useMappedState as _useMappedState,
 } from 'redux-react-hook';
 import { useMemo, useCallback } from 'react';
-import { AnyActionCreator, DefaultState } from './types';
+import { AC, DefaultState } from './types';
 
-export function useActions<T extends { [x: string]: AnyActionCreator }>(
+export function useActions<T extends { [x: string]: AC }>(
   actionCreators: T
 ): T {
   const dispatch = useDispatch();

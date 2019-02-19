@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Store } from 'redux';
 import { StoreContext } from 'redux-react-hook';
 import { TypelessContext } from './TypelessContext';
-import { RootReducer } from './types';
+import { RootReducer } from './RootReducer';
 import { RootEpic } from './RootEpic';
 
 export interface TypelessProviderProps {
