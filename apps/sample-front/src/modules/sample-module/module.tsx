@@ -1,26 +1,22 @@
 import * as Rx from 'rx';
 import { createEpic, createReducer, useModule } from 'typeless';
-import { State } from 'src/types';
 import { SampleModuleActions, MODULE, SampleModuleState } from './interface';
 import React from 'react';
 import { SampleModuleView } from './components/SampleModuleView';
 
 // --- Epic ---
-export const epic = createEpic<State>(MODULE).on(
-  SampleModuleActions.test,
-  () => {
-    console.log('cb');
-    return Rx.mergeObs(
-      Rx.of(SampleModuleActions.test2()),
-      Rx.of(SampleModuleActions.delayed()).pipe(
-        Rx.delay(5000),
-        Rx.tap(() => {
-          console.log('delay e');
-        })
-      )
-    );
-  }
-);
+export const epic = createEpic(MODULE).on(SampleModuleActions.test, () => {
+  console.log('cb');
+  return Rx.mergeObs(
+    Rx.of(SampleModuleActions.test2()),
+    Rx.of(SampleModuleActions.delayed()).pipe(
+      Rx.delay(5000),
+      Rx.tap(() => {
+        console.log('delay e');
+      })
+    )
+  );
+});
 // .on(SampleModuleActions.test, () => {
 //   return RouterActions.push('/' + Date.now());
 // });

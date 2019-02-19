@@ -12,3 +12,7 @@ export type RouteConfig = {
   auth: boolean;
   component: React.ReactElement<any>;
 };
+
+declare module 'typeless/src/types' {
+  export interface DefaultState extends State {}
+}

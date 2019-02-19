@@ -1,10 +1,6 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  applyMiddleware,
-  compose,
-  createStore as createReduxStore,
-} from 'redux';
+import { applyMiddleware, createStore as createReduxStore } from 'redux';
 import {
   createEpicMiddleware,
   createRootEpic,
@@ -28,11 +24,7 @@ if (process.env.NODE_ENV !== 'production') {
     })
   );
 }
-const store = createReduxStore(
-  rootReducer,
-  {},
-  compose(applyMiddleware(...middleware))
-);
+const store = createReduxStore(rootReducer, {}, applyMiddleware(...middleware));
 
 const render = () => {
   try {
