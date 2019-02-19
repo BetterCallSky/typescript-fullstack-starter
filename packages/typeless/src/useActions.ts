@@ -2,8 +2,8 @@ import {
   useDispatch,
   useMappedState as _useMappedState,
 } from 'redux-react-hook';
-import { useMemo, useCallback } from 'react';
-import { AC, DefaultState } from './types';
+import { useMemo } from 'react';
+import { AC } from './types';
 
 export function useActions<T extends { [x: string]: AC }>(
   actionCreators: T
@@ -25,12 +25,4 @@ export function useActions<T extends { [x: string]: AC }>(
       ),
     names
   );
-}
-
-export function useMappedState<R, T = DefaultState>(
-  fn: (state: T) => R,
-  deps?: any[]
-) {
-  const mapState = useCallback(fn, deps || []);
-  return _useMappedState(mapState);
 }
