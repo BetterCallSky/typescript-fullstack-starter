@@ -1,5 +1,5 @@
 import * as Rx from 'rx';
-import { createActions, createReducer, createEpic } from 'typeless';
+import { createActions, createReducer, Epic } from 'typeless';
 
 type Validator<T, TState> = (
   data: T,
@@ -62,7 +62,7 @@ export class ReduxForm<TData, TState = {}> {
       errors: {},
       touched: {},
     };
-    const epic = createEpic<TState>(`form_${form}`)
+    const epic = new Epic<TState>(`form_${form}`)
       .onMany(
         [
           actions.change,

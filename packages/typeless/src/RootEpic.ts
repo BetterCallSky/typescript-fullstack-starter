@@ -1,9 +1,10 @@
 import { merge } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { EpicChain, Deps } from './types';
+import { Deps } from './types';
+import { Epic } from './Epic';
 
 export class RootEpic<TState> {
-  private tree: { [x: string]: EpicChain<TState> };
+  private tree: { [x: string]: Epic<TState> };
   constructor() {
     this.tree = {};
   }
@@ -11,7 +12,7 @@ export class RootEpic<TState> {
     return deps.action$.pipe(
       mergeMap(action => {
         const handlers = Object.values(this.tree)
-          .map(epic => epic.getHandlers()[action.type])
+          .map(epic => epic.handlers[action.type])
           .filter(x => x)
           .reduce((ret, arr) => {
             ret.push(...arr);
@@ -22,7 +23,7 @@ export class RootEpic<TState> {
     );
   }
 
-  addEpic(epic: EpicChain<TState>) {
+  addEpic(epic: Epic<TState>) {
     this.tree[epic.epicName] = epic;
   }
 

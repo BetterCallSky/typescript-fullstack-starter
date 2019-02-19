@@ -34,34 +34,34 @@ export type HandlerFn<TState> = (
   deps: Deps<TState>
 ) => (action: AnyAction) => Observable<EpicResult>;
 
-export interface EpicChain<TState = DefaultState> {
-  epicName: string;
-  attach(epic: EpicChain<TState>): this;
-  getHandlers(): { [x: string]: Array<HandlerFn<TState>> };
-  on<TAC extends AC>(ac: TAC, handler: EpicHandler<TAC, TState>): this;
-  onMany<TAC extends AC, TAC2 extends AC>(
-    ac: [TAC, TAC2],
-    handler: EpicHandler<TAC | TAC2, TState>
-  ): this;
-  onMany<TAC extends AC, TAC2 extends AC, TAC3 extends AC>(
-    ac: [TAC, TAC2, TAC3],
-    handler: EpicHandler<TAC | TAC2 | TAC3, TState>
-  ): this;
-  onMany<TAC extends AC, TAC2 extends AC, TAC3 extends AC, TAC4 extends AC>(
-    ac: [TAC, TAC2, TAC3, TAC4],
-    handler: EpicHandler<TAC | TAC2 | TAC3 | TAC4, TState>
-  ): this;
-  onMany<
-    TAC extends AC,
-    TAC2 extends AC,
-    TAC3 extends AC,
-    TAC4 extends AC,
-    TAC5 extends AC
-  >(
-    ac: [TAC, TAC2, TAC3, TAC4, TAC5],
-    handler: EpicHandler<TAC | TAC2 | TAC3 | TAC4 | TAC5, TState>
-  ): this;
-}
+// export interface EpicChain<TState = DefaultState> {
+//   epicName: string;
+//   attach(epic: EpicChain<TState>): this;
+//   getHandlers(): { [x: string]: Array<HandlerFn<TState>> };
+//   on<TAC extends AC>(ac: TAC, handler: EpicHandler<TAC, TState>): this;
+//   onMany<TAC extends AC, TAC2 extends AC>(
+//     ac: [TAC, TAC2],
+//     handler: EpicHandler<TAC | TAC2, TState>
+//   ): this;
+//   onMany<TAC extends AC, TAC2 extends AC, TAC3 extends AC>(
+//     ac: [TAC, TAC2, TAC3],
+//     handler: EpicHandler<TAC | TAC2 | TAC3, TState>
+//   ): this;
+//   onMany<TAC extends AC, TAC2 extends AC, TAC3 extends AC, TAC4 extends AC>(
+//     ac: [TAC, TAC2, TAC3, TAC4],
+//     handler: EpicHandler<TAC | TAC2 | TAC3 | TAC4, TState>
+//   ): this;
+//   onMany<
+//     TAC extends AC,
+//     TAC2 extends AC,
+//     TAC3 extends AC,
+//     TAC4 extends AC,
+//     TAC5 extends AC
+//   >(
+//     ac: [TAC, TAC2, TAC3, TAC4, TAC5],
+//     handler: EpicHandler<TAC | TAC2 | TAC3 | TAC4 | TAC5, TState>
+//   ): this;
+// }
 
 export interface RootReducer<TState = DefaultState> {
   (state: TState, action: AnyAction): TState;

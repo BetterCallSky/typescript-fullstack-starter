@@ -41,7 +41,7 @@ export const RouteResolver = () => {
     return match.component;
   }
   if (!prevUser && user) {
-    // user is logging ina
+    // user is logging in
     // keep rendering current route
     match = getMatch(location.pathname, !user);
     if (match) {

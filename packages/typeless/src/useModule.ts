@@ -1,14 +1,14 @@
 import { ChainedReducer } from './createReducer';
 import React, { useEffect, useContext, useMemo } from 'react';
 import { TypelessContext } from './TypelessContext';
-import { EpicChain } from './types';
+import { Epic } from './Epic';
 import { getIsHmr } from './onHmr';
 
 type AnyActionCreator = (...args: any[]) => any;
 
 interface BaseLoaderOptions<TState> {
   children?: React.ReactChild;
-  epic: EpicChain<TState>;
+  epic: Epic<TState>;
   actions?: {
     mounted?: AnyActionCreator;
     unmounted?: AnyActionCreator;
